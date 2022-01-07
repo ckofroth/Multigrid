@@ -10,5 +10,5 @@ This folder contains code to solve the 1D Poisson problem on a line with Dirichl
    - Tests optimality of relaxation parameter and outputs Euclidean 2-norm errors between multigrid and direct solver function in PrettyTable format and on a graph
    - Tests limits of grid size for multigrid to run and outputs runtime in PrettyTable format 
 
-All of the functions in the code are documents in the standard format. This was my way of starting to learn Python!
+All of the functions in the code are documented in the standard format. This was my way of starting to learn Python!
 
