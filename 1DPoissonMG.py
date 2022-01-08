@@ -128,14 +128,19 @@ mg_limit(self, N_array)
                 N_array : array_like
                           grid size array 
 
-
-Some results:
+ana_comp(self, N, g):
     
-    - Solver_comp verifies the numerical accuracy of multigrid while featuring
-      a much lower execution time than the Numpy direct solver (direct solver 
-      takes 49 seconds on a 16385 grid (N=14); I have not pushed it further, 
-      but it would likely take at least an order of magnitude longer)
-    - Multigrid method can run on up to a 524289 (N=19) grid in under 1 minute    
+    returns None; compare multigrid solution to the analytical solution when 
+    f(x)=sin(x); generates plot of pointwise error vector and prints the 
+    Euclidean error of this vector
+                     
+    Parameters: self : object instance 
+                             
+                N : int
+                    rid size
+                    
+                g : array_like
+                    boundary data    
 """
 
 import numpy as np
@@ -254,7 +259,7 @@ class Multigrid:
     
     def solver_comp(self, N_array):
         
-        # set up parameters and boundary
+        # set up multigrid parameters and boundary
         
         omega       = 2/3
         sweep_start = 3
@@ -338,7 +343,7 @@ class Multigrid:
         
     def relax_test(self, omega_array, N): 
 
-        # set up parameters
+        # set up multigrid parameters
         
         sweep_start = 3
         sweep_end   = 3
@@ -422,7 +427,7 @@ class Multigrid:
         
     def mg_limit(self, N_array):
         
-        # set up parameters and boundary
+        # set up multigrid parameters and boundary
 
         omega       = 2/3
         sweep_start = 3
@@ -453,7 +458,7 @@ class Multigrid:
             x[N] = g[1] # get right boundary correct
             tic  = time.perf_counter() # start multigrid timer
             
-            for i in range(cycles): # do "cycles" V-cycles
+            for i in range(cycles): # do "cycles" V-cycles 
                 
                 y = V_cycle(x, f, N, sweep_start, sweep_end, omega)
                 x = y[:]
@@ -465,30 +470,88 @@ class Multigrid:
         print(table) # print table 
         
         return None
+      
+    def ana_comp(self, N, g):
+        
+        # initialize grid and analytical solution
+        
+        grid = np.linspace(0, 1, N+1)
+        x_ana = [g[0] - g[0]*j + g[1]*j - np.sin(1)*j + np.sin(j) \
+                        for j in grid]
+        
+        # initialize multgrid slution and forcing
+        
+        x_mg    = np.zeros(N+1)
+        f       = [np.sin(j) for j in grid]
+        f[0]    = 0
+        f[N]    = 0
+        x_mg[0] = g[0]
+        x_mg[N] = g[1]
+        
+        # set up multigrid parameters
+        
+        omega       = 2/3
+        sweep_start = 3
+        sweep_end   = 3
+        cycles      = 4
+        
+        for i in range(cycles): # do "cycles" V-cycles
+            
+            y    = V_cycle(x_mg, f, N, sweep_start, sweep_end, omega)
+            x_mg = y[:]
+        
+        # generate pointwise error vector   
+        
+        err_vec = np.subtract(x_mg, x_ana)
+        err_vec = [abs(err) for err in err_vec]
+        
+        # create error plot 
+        
+        plt.plot(grid, err_vec, linewidth = 2, label = r'$|u(x_j)-u_{mg}[j]|$')
+        plt.grid()
+        plt.legend()
+        plt.xlabel(r"$x$")
+        plt.ylabel(r"$y$")
+        plt.title(r"Error Vector for Analytical and Multigrid Comparison For" 
+                  "\n"
+                  "$f(x)=\sin(x)$ and $u(0)=$%f, $u(1)=$%f" % (g[0], g[1]))        
+        plt.tight_layout()
+        plt.show()
+        
+        # print 2-norm error
+        
+        print("Euclidean error is", np.linalg.norm(err_vec))
+        
+        return None
     
-
 ##############################################################################
 ####                                                                      ####
 ####                         Run multigrid tests                          ####
 ####                                                                      ####
 ##############################################################################
 
+
 drive  = Multigrid() # instantiate multigrid class
 
 # test solver_comp
 
-# N_array1    = [2**n for n in range(6,14)]
+# N_array1    = [2**n for n in range(6,14)] # array of grid sizes
 # drive.solver_comp(N_array1)
 
 # test relax_test 
 
-# omega_array = [0.5, 0.6, 2/3, 0.7, 0.8]
+# omega_array = [0.5, 0.6, 2/3, 0.7, 0.8] # array of relaxation parameters
 # N           = 2**8
 # drive.relax_test(omega_array, N)
 
 
 # test mg_limit
 
-# N_array2    = [2**n for n in range(6,16)] 
+# N_array2    = [2**n for n in range(6,16)]  # array of grid sizes
 # drive.mg_limit(N_array2)
 
+# test ana_comp
+
+N = 2**6   # grid size
+g = [-1,1] # boundary data
+drive.ana_comp(N, g)
