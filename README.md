@@ -2,7 +2,7 @@
 
 This folder contains code to solve the 1D Poisson problem on a line with Dirichlet boundary conditions. The code is written in Python. The precise contents of this folder are the following files:
 
-1. A Jupyter notebook `BackgroundandResults.pynb` which contains mathematical preliminaries to explain problem, a brief description of the multigrid method, and features of the code (along with some sample output)
+1. A Jupyter notebook `BackgroundandResults.pynb` which contains mathematical preliminaries to explain the problem, a brief description of the multigrid method, and features of the code (along with some sample output)
 2. A pdf of the Juptyer notebook
 3. A Python file `1DPoissonMG.py` which contains code with the following functionality:
 
@@ -13,7 +13,7 @@ This folder contains code to solve the 1D Poisson problem on a line with Dirichl
    - Tests limits of grid size for multigrid to run and outputs runtime in PrettyTable format 
    - Compares multigrid solution to the analytical solution when the forcing is sin(x) and the boundary data is arbitrary via a pointwise error plot and outputs Euclidean 2-norm error
 
-All of the functions in the code are carefully documented at the top of `1DPoissonMG.py` in the same format as NumPy - a brief description of the functionality and a description of all of the variables (both in data type and purpose). 
+All of the functions in the code are carefully documented in the header of`1DPoissonMG.py` in the same format as NumPy - a brief description of the functionality and a description of all of the variables (both in data type and purpose). 
 
 This was my way of starting to learn Python! 
 
