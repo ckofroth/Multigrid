@@ -10,16 +10,16 @@ problem
                     -u''=f, u(0)=g(0), u(1)=g(1),
 
 where g(0) and g(1) are given boundary data. It has the capabilities of taking 
-in random forcing f and boundary data g. We wll dscretize the probleem so that 
-there aree N-1 interior notes, where ewe will take N to be a power of 2 larger 
-than 1 (N^m, and m>1). The methods needed for the multgrid solver are 
+in random forcing f and boundary data g. We will dscretize the problem so that 
+there are N-1 interior nodes, where we will take N to be a power of 2 larger 
+than 1 (i.e. of the form N^m, and m>1). The methods needed for the multgrid solver are 
 the following:
 
     
 Jacobi(x, f, omega, N)
     
-    returns result of one iterations of the damped Jacobi method with matrix 
-    given by finite differrence approximation of 2nd order derivative operator
+    returns resulting vector from one iterations of the damped Jacobi method with the matrix 
+    given by the finite differrence approximation of 2nd order derivative operator
 
     Parameters: x : array_like
                     iniitial guess
@@ -34,8 +34,8 @@ Jacobi(x, f, omega, N)
                     
 residual(x, f, N)
     
-    returns residual f-Ax where A is the  matrix given by finite differrence 
-    approximation of 2nd order derivative operator
+    returns residual vector f-Ax where A is the matrix given by the finite differrence 
+    approximation of the 2nd order derivative operator
 
     Parameters: x : array_like
                     approximate solution 
@@ -68,7 +68,7 @@ refine(res_coarse, N)
    
 V_cycle(x, f, N, sweep_start, sweep_end, omega)
 
-    returns the result of performing one multigrid v-cycle 
+    returns the resulting vector from performing one multigrid v-cycle 
 
     Parameters: x : array_like
                     initial guess 
@@ -213,7 +213,7 @@ def V_cycle(x, f, N, sweep_start, sweep_end, omega):
         y = Jacobi(x,f, omega, N)
         x = y[:]
     
-    # coompute residual, then coarsen it
+    # compute residual, then coarsen it
     
     res             = residual(y, f, N) 
     [res_coarse, N] = coarsen(res, N)
@@ -531,7 +531,7 @@ class Multigrid:
 ##############################################################################
 
 
-drive  = Multigrid() # instantiate multigrid class
+drive  = Multigrid() # instantiate multigrid class to create multigrid object
 
 # test solver_comp
 
@@ -547,11 +547,11 @@ drive  = Multigrid() # instantiate multigrid class
 
 # test mg_limit
 
-# N_array2    = [2**n for n in range(6,16)]  # array of grid sizes
-# drive.mg_limit(N_array2)
+N_array2    = [2**n for n in range(6,16)]  # array of grid sizes
+drive.mg_limit(N_array2)
 
 # test ana_comp
 
-N = 2**6   # grid size
-g = [-1,1] # boundary data
-drive.ana_comp(N, g)
+# N = 2**6   # grid size
+# g = [-1,1] # boundary data
+# drive.ana_comp(N, g)
