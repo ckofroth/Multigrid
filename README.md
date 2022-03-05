@@ -15,5 +15,5 @@ This folder contains code to solve the 1D Poisson problem on a line with Dirichl
 
 All of the functions in the code are carefully documented in the header of`1DPoissonMG.py` in the same format as NumPy - a brief description of the functionality and a description of all of the variables (both in data type and purpose). 
 
-This was my way of starting to learn Python! 
+This was my way of starting to learn Python! It is a 1D implementation of a project that I performed in my first year of graduate school, although I added in new error diagnostic features.
 
